@@ -30,6 +30,10 @@ type binary struct {
 	right node
 }
 
+type numericLiteral struct {
+	token token
+}
+
 type call struct {
 	fn   node
 	args []node
@@ -40,9 +44,11 @@ func (p *prefix) expr()  {}
 func (p *postfix) expr() {}
 func (b *binary) expr()  {}
 func (c *call) expr()    {}
+func (n numericLiteral) expr()    {}
 
 
 func (n *named) String() string   { return n.value }
+func (n numericLiteral) String() string   { return n.token.value }
 func (p *prefix) String() string  { return fmt.Sprintf("(prefix %s %s)", p.op, p.arg) }
 func (p *postfix) String() string { return fmt.Sprintf("(postfix %s %s)", p.op, p.arg) }
 func (b *binary) String() string  { return fmt.Sprintf("(%s %s %s)", b.op, b.left, b.right) }

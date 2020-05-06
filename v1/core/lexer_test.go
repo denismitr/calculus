@@ -38,10 +38,11 @@ func TestLexer(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-			tokens, err := tokenize(tc.input)
+			l := newLexer()
+			err := l.tokenize(tc.input)
 
 			assert.NoError(t, err)
-			assert.Equal(t, tc.tokens, tokens)
+			assert.Equal(t, tc.tokens, l.tokens)
 		})
 	}
 }
