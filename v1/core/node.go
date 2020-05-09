@@ -2,20 +2,22 @@ package core
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
+	"strconv"
 	"strings"
 )
 
 type node interface {
-	expr()
+	eval() (token, error)
 	String() string
 }
 
-type named struct {
-	value string
+type identifier struct {
+	t token
 }
 
 type prefix struct {
-	op  kind
+	op  token
 	arg node
 }
 
@@ -25,13 +27,13 @@ type postfix struct {
 }
 
 type binary struct {
-	op    kind
+	op    token
 	left  node
 	right node
 }
 
-type numericLiteral struct {
-	token token
+type integer struct {
+	t token
 }
 
 type call struct {
@@ -39,17 +41,42 @@ type call struct {
 	args []node
 }
 
-func (n *named) expr()   {}
-func (p *prefix) expr()  {}
-func (p *postfix) expr() {}
-func (b *binary) expr()  {}
-func (c *call) expr()    {}
-func (n numericLiteral) expr()    {}
+func (n *identifier) eval() (token, error) {
+	return n.t, nil
+}
+
+func (n *prefix) eval() (token, error) {
+	return n.op, nil
+}
+
+func (n *postfix) eval() (token, error) {
+	return token{}, nil
+}
+
+func (n *binary) eval() (token, error)  {
+	l, lok := n.left.(*integer)
+	r, rok := n.right.(*integer)
+	if lok && rok {
+		lval, _ := strconv.Atoi(l.t.value)
+		rval, _ := strconv.Atoi(r.t.value)
+		result := lval + rval
+		return token{kind: INT, value: strconv.Itoa(result)}, nil
+	}
+
+	return token{}, errors.New("BOOOOO")
+}
+
+func (c *call) eval() (token, error)  {
+	return c.args[0].eval() // fixme
+}
+func (n *integer) eval() (token, error) {
+	return n.t, nil
+}
 
 
-func (n *named) String() string   { return n.value }
-func (n numericLiteral) String() string   { return n.token.value }
-func (p *prefix) String() string  { return fmt.Sprintf("(prefix %s %s)", p.op, p.arg) }
+func (n *identifier) String() string { return n.t.value }
+func (n *integer) String() string    { return n.t.value }
+func (p *prefix) String() string     { return fmt.Sprintf("(prefix %s %s)", p.op, p.arg) }
 func (p *postfix) String() string { return fmt.Sprintf("(postfix %s %s)", p.op, p.arg) }
 func (b *binary) String() string  { return fmt.Sprintf("(%s %s %s)", b.op, b.left, b.right) }
 

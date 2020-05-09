@@ -10,6 +10,10 @@ func newLexer() *lexer {
 	return &lexer{}
 }
 
+func (l *lexer) count() int {
+	return len(l.tokens)
+}
+
 func (l *lexer) pop() (token, bool) {
 	var tok token
 	if len(l.tokens) == 0 {

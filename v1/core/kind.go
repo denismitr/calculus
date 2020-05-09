@@ -6,6 +6,7 @@ type kind int
 
 const (
 	ILLEGAL = iota
+	IDENT
 	INT
 	FLOAT
 	ADD
@@ -20,6 +21,7 @@ const (
 
 var kinds = [...]string{
 	ILLEGAL: "illegal",
+	IDENT:   "IDENTIFIER",
 	INT:     "integer",
 	FLOAT:   "float",
 	ADD:     "+",
