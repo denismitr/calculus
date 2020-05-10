@@ -15,8 +15,12 @@ const (
 	MOD
 	MUL
 	EQL
+	INC
+	DEC
 	LPAREN
 	RPAREN
+
+	COMMA
 )
 
 var kinds = [...]string{
@@ -30,8 +34,11 @@ var kinds = [...]string{
 	MUL:     "*",
 	MOD:     "%",
 	EQL:     "=",
+	INC:     "++",
+	DEC:     "--",
 	LPAREN:  "(",
 	RPAREN:  ")",
+	COMMA: ".",
 }
 
 func (k kind) String() string {

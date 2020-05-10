@@ -20,7 +20,7 @@ func (l *lexer) pop() (token, bool) {
 		return tok, false
 	}
 
-	tok, l.tokens = l.tokens[len(l.tokens)-1], l.tokens[:len(l.tokens)-1]
+	tok, l.tokens = l.tokens[0], l.tokens[1:]
 	return tok, true
 }
 
@@ -30,7 +30,7 @@ func (l *lexer) peek() (token, bool) {
 		return tok, false
 	}
 
-	tok = l.tokens[len(l.tokens)-1]
+	tok = l.tokens[0]
 	return tok, true
 }
 

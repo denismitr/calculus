@@ -46,7 +46,16 @@ func (p *parser) parse(precedence int) (node, error) {
 		return nil, err
 	}
 
-	for next, ok := p.l.peek(); ok && precedence < p.g.prefixPrecedence[next.kind]; {
+	for  {
+		next, ok := p.l.peek();
+		if !ok {
+			break
+		}
+
+		if precedence >= p.g.prefixPrecedence[next.kind] {
+			break
+		}
+
 		tok, ok = p.l.pop()
 		if !ok {
 			break
@@ -97,8 +106,17 @@ func (p *parser) resolveIdentifier(t token) (node, error) {
 	return &identifier{t: t}, nil
 }
 
-func (p *parser) resolveBinary(left node, t token) (node, error) {
+func (p *parser) resolveLeftBinary(left node, t token) (node, error) {
 	right, err := p.parse(p.g.infixPrecedence[t.kind])
+	if err != nil {
+		return nil, err
+	}
+
+	return &binary{op: t, left: left, right: right}, nil
+}
+
+func (p *parser) resolveRightBinary(left node, t token) (node, error) {
+	right, err := p.parse(p.g.infixPrecedence[t.kind] - 1)
 	if err != nil {
 		return nil, err
 	}
@@ -115,6 +133,46 @@ func (p *parser) resolvePrefix(t token) (node, error) {
 	return &prefix{op: t, arg: arg}, nil
 }
 
+func (p* parser) resolvePostfix(left node, t token) (node, error) {
+	return &postfix{op: t, arg: left}, nil
+}
+
 func (p *parser) resolveInteger(t token) (node, error) {
 	return &integer{t}, nil
+}
+
+func (p *parser) resolveCallable(left node, t token) (node, error) {
+	next, ok := p.l.peek()
+	if !ok {
+		return nil, ErrNoMoreTokens
+	}
+
+	if next.kind == RPAREN {
+		// A call without arguments.
+		p.l.pop()
+		return &callable{fn: left}, nil
+	}
+
+	var args []node
+	for {
+		arg, err := p.parse(0)
+		if err != nil {
+			return nil, err
+		}
+
+		args = append(args, arg)
+
+		next, ok := p.l.peek()
+		if !ok || next.kind != COMMA {
+			break
+		}
+
+		p.l.pop()
+	}
+
+	if err := p.expect(RPAREN); err != nil {
+		return nil, err
+	}
+
+	return &callable{fn: left, args: args}, nil
 }
