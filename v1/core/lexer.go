@@ -43,44 +43,28 @@ func (l *lexer) tokenize(input string) error {
 			continue
 		}
 
-		if input[cursor] == '(' {
-			l.tokens = append(l.tokens, token{kind: LPAREN, value: "("})
+		if isOperator(input[cursor]) {
+			token, n, err := identifyOperator(input[cursor : cursor+1])
+			if err != nil {
+				return err
+			}
+			l.tokens = append(l.tokens, token)
+			cursor += n
+			continue
+		}
+
+		if isParenthesis(input[cursor]) {
+			token, err := identify(input[cursor : cursor+1])
+			if err != nil {
+				return err
+			}
+			l.tokens = append(l.tokens, token)
 			cursor++
 			continue
 		}
 
-		if input[cursor] == ')' {
-			l.tokens = append(l.tokens, token{kind: RPAREN, value: ")"})
-			cursor++
-			continue
-		}
-
-		if input[cursor] == '+' {
-			l.tokens = append(l.tokens, token{kind: ADD, value: "+"})
-			cursor++
-			continue
-		}
-
-		if input[cursor] == '-' {
-			l.tokens = append(l.tokens, token{kind: SUB, value: "-"})
-			cursor++
-			continue
-		}
-
-		if input[cursor] == '*' {
-			l.tokens = append(l.tokens, token{kind: MUL, value: "*"})
-			cursor++
-			continue
-		}
-
-		if input[cursor] == '/' {
-			l.tokens = append(l.tokens, token{kind: DIV, value: "/"})
-			cursor++
-			continue
-		}
-
-		if input[cursor] == '%' {
-			l.tokens = append(l.tokens, token{kind: MOD, value: "%"})
+		if input[cursor] == ',' {
+			l.tokens = append(l.tokens, token{kind: COMMA, value: "%"})
 			cursor++
 			continue
 		}
@@ -101,4 +85,59 @@ func (l *lexer) tokenize(input string) error {
 	}
 
 	return nil
+}
+
+func identifyOperator(input string) (token, int, error) {
+	cursor := 0
+	for cursor < len(input) {
+		curr := input[cursor]
+		if isOperator(curr) {
+			if len(input) <= cursor + 1 {
+				token, err := identify(input[cursor:cursor+1])
+				return token, cursor + 1, err
+			}
+			next := input[cursor+1]
+			if next == curr {
+				token, err := identify(input[cursor:cursor+2])
+				return token, cursor + 2, err
+			}
+		}
+		cursor++
+	}
+
+	return token{}, cursor, errors.Errorf("unknown token %s", input)
+}
+
+func identify(input string) (token, error) {
+	switch input {
+	case "+":
+		return token{kind: ADD, value: input}, nil
+	case "-":
+		return token{kind: SUB, value: input}, nil
+	case "*":
+		return token{kind: MUL, value: input}, nil
+	case "/":
+		return token{kind: DIV, value: input}, nil
+	case "%":
+		return token{kind: MOD, value: input}, nil
+	case "(":
+		return token{kind: LPAREN, value: input}, nil
+	case ")":
+		return token{kind: RPAREN, value: input}, nil
+	}
+
+	return token{}, nil
+}
+
+func isOperator(r uint8) bool {
+	switch r {
+	case '-','+','*','/':
+		return true
+	default:
+		return false
+	}
+}
+
+func isParenthesis(r uint8) bool {
+	return r == '(' || r == ')'
 }

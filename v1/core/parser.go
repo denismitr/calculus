@@ -52,7 +52,8 @@ func (p *parser) parse(precedence int) (node, error) {
 			break
 		}
 
-		if precedence >= p.g.prefixPrecedence[next.kind] {
+		nextPrecedence := p.g.infixPrecedence[next.kind]
+		if precedence >= nextPrecedence {
 			break
 		}
 

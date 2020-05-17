@@ -1,6 +1,9 @@
 package core
 
-import "github.com/pkg/errors"
+import (
+	"github.com/pkg/errors"
+	"log"
+)
 
 type binaryHandler func(l, r token) (token, error)
 
@@ -27,8 +30,9 @@ func (e *evaluator) binary(op, l, r token) (token, error) {
 }
 
 func (e *evaluator) multiple(toks ...token) (token, error) {
+	log.Fatalf("%#v", toks)
 	var result token
-	handler, ok := e.binaryHandlers[ADD]
+	handler, ok := e.binaryHandlers[ADD] // fixme
 	if !ok {
 		return result, errors.Errorf("handler not found")
 	}

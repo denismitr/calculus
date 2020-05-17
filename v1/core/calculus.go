@@ -45,8 +45,14 @@ func InitializeDefaultGrammar() Initializer {
 
 		g.prefix(INT, 0, p.resolveInteger)
 		g.prefix(ADD, 6, p.resolvePrefix)
+		g.prefix(SUB, 6, p.resolvePrefix)
 
 		g.infix(ADD, 4, p.resolveLeftBinary)
+		g.infix(SUB, 4, p.resolveLeftBinary)
+
+		g.infix(MUL, 5, p.resolveLeftBinary)
+		g.infix(DIV, 5, p.resolveLeftBinary)
+
 		g.infix(INC, 7, p.resolvePostfix)
 
 		g.infix(LPAREN, 8, p.resolveCallable)
@@ -56,5 +62,7 @@ func InitializeDefaultGrammar() Initializer {
 func InitializeDefaultEvaluator() EvaluatorInitializer {
 	return func(e *evaluator) {
 		e.binaryHandlers[ADD] = sum
+		e.binaryHandlers[MUL] = mul
+		e.binaryHandlers[SUB] = sub
 	}
 }
