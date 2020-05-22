@@ -81,6 +81,18 @@ func (l *lexer) tokenize(input string) error {
 			continue
 		}
 
+		if isName(input[cursor : cursor+1]) {
+			j := cursor + 1
+
+			for j < len(input) && isName(input[cursor:j+1]) {
+				j++
+			}
+
+			l.tokens = append(l.tokens, token{kind: IDENT, value: input[cursor:j]})
+			cursor = j
+			continue
+		}
+
 		return errors.Errorf("String invalid near character at position %d", cursor)
 	}
 
@@ -124,20 +136,11 @@ func identify(input string) (token, error) {
 		return token{kind: LPAREN, value: input}, nil
 	case ")":
 		return token{kind: RPAREN, value: input}, nil
+	case "++":
+		return token{kind: INC, value: input}, nil
+	case "--":
+		return token{kind: DEC, value: input}, nil
 	}
 
-	return token{}, nil
-}
-
-func isOperator(r uint8) bool {
-	switch r {
-	case '-','+','*','/':
-		return true
-	default:
-		return false
-	}
-}
-
-func isParenthesis(r uint8) bool {
-	return r == '(' || r == ')'
+	return token{}, errors.Errorf("%s is not a valid operator", input)
 }

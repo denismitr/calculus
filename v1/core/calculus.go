@@ -64,5 +64,6 @@ func InitializeDefaultEvaluator() EvaluatorInitializer {
 		e.binaryHandlers[ADD] = sum
 		e.binaryHandlers[MUL] = mul
 		e.binaryHandlers[SUB] = sub
+		e.callableHandlers["lg"] = lg
 	}
 }

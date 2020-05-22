@@ -21,6 +21,9 @@ func TestCalculusWithValidInputs(t *testing.T) {
 		{name: "multi-4", expr: "5 + (6 * 10 * 2)", result: "125"},
 		{name: "multi-5", expr: "5 + (6 * 10 * 2 * 5)", result: "605"},
 		{name: "multi-6", expr: "5 + (6 * 10 * 2 * 5) - 1", result: "604"},
+		{name: "lg-with-default-precision", expr: "lg(2)", result: "0.30103"},
+		{name: "lg-with-precision-1", expr: "lg(2, 1)", result: "0.3"},
+		{name: "lg-with-precision-3", expr: "lg(8, 3)", result: "0.903"},
 	}
 
 	c := New(InitializeDefaultGrammar(), InitializeDefaultEvaluator())

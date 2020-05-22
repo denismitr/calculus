@@ -72,7 +72,6 @@ func (c *callable) eval(e *evaluator) (token, error)  {
 		return token{}, nil
 	}
 
-	tokens = append(tokens, l)
 	for i := range c.args {
 		t, err := c.args[i].eval(e)
 		if err != nil {
@@ -82,7 +81,7 @@ func (c *callable) eval(e *evaluator) (token, error)  {
 		tokens = append(tokens, t)
 	}
 
-	return e.multiple(tokens...)
+	return e.callable(l, tokens...)
 }
 func (n *integer) eval(_ *evaluator) (token, error) {
 	return n.t, nil
