@@ -22,6 +22,7 @@ func TestCalculusWithValidInputs(t *testing.T) {
 		{name: "multi-4", expr: "5 + (6 * 10 * 2)", result: "125"},
 		{name: "multi-5", expr: "5 + (6 * 10 * 2 * 5)", result: "605"},
 		{name: "multi-6", expr: "5 + (6 * 10 * 2 * 5) - 1", result: "604"},
+		{name: "div-1", expr: "6 / 3", result: "2"},
 		{name: "increment-1", expr: "5++", result: "6"},
 		{name: "increment-2", expr: "5++ + 8", result: "14"},
 		{name: "decrement-4", expr: "5--", result: "4"},

@@ -12,6 +12,7 @@ func InitializeLibraries(e *evaluator) core.EvaluatorInitializer {
 		e.binaryHandlers[core.ADD] = num.Sum
 		e.binaryHandlers[core.MUL] = num.Mul
 		e.binaryHandlers[core.SUB] = num.Sub
+		e.binaryHandlers[core.DIV] = num.Div
 		e.unaryHandler[core.INC] = num.Inc
 		e.unaryHandler[core.DEC] = num.Dec
 

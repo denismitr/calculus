@@ -5,7 +5,6 @@ import (
 	"github.com/pkg/errors"
 	"math"
 	"strconv"
-	"strings"
 )
 
 func Inc(t core.Token) (core.Token, error) {
@@ -22,89 +21,28 @@ func Dec(t core.Token) (core.Token, error) {
 	})
 }
 
-func applyUnaryOperationOnFloat(t core.Token, applier func (float64) float64) (core.Token, error) {
-	var result core.Token
-	var k core.Kind
-	f, err := strconv.ParseFloat(t.Value, 64)
-	if err != nil {
-		return result, err
-	}
-
-	f = applier(f)
-
-	v, k := deriveValueAndKind(f, k)
-
-	result.Value = v
-	result.Kind = k
-
-	return result, nil
-}
-
-func deriveValueAndKind(f float64, k core.Kind) (string, core.Kind) {
-	v := strconv.FormatFloat(f, 'f', 5, 64)
-	k = core.FLOAT
-
-	if strings.Contains(v, ".00000") {
-		v = strings.ReplaceAll(v, ".00000", "")
-		k = core.INT
-	}
-	return v, k
-}
-
-func Sum(l, r core.Token) (core.Token, error) {
-	var result core.Token
-	if l.Kind == core.INT && r.Kind == core.INT {
-		lVal, rVal, err := convertLeftAndRightToIntegers(l.Value, r.Value)
-		if err != nil {
-			return result, err
-		}
-
-		return core.Token{Value: strconv.Itoa(lVal+rVal), Kind: core.INT}, nil
-	}
-
-	return result, errors.Errorf("could not add %s to %s", l.Value, r.Value)
+func Sum(l, r core.Token) (result core.Token, err error) {
+	return leftAndRightOperation(l, r, func(lf, rf float64) float64 {
+		return lf + rf
+	})
 }
 
 func Mul(l, r core.Token) (core.Token, error) {
-	var result core.Token
-	if l.Kind == core.INT && r.Kind == core.INT {
-		lVal, rVal, err := convertLeftAndRightToIntegers(l.Value, r.Value)
-		if err != nil {
-			return result, err
-		}
-
-		return core.Token{Value: strconv.Itoa(lVal*rVal), Kind: core.INT}, nil
-	}
-
-	return result, errors.Errorf("could not multiply %s by %s", l.Value, r.Value)
+	return leftAndRightOperation(l, r, func(lf, rf float64) float64 {
+		return lf * rf
+	})
 }
 
 func Sub(l, r core.Token) (core.Token, error) {
-	var result core.Token
-	if l.Kind == core.INT && r.Kind == core.INT {
-		lVal, rVal, err := convertLeftAndRightToIntegers(l.Value, r.Value)
-		if err != nil {
-			return result, err
-		}
-
-		return core.Token{Value: strconv.Itoa(lVal-rVal), Kind: core.INT}, nil
-	}
-
-	return result, errors.Errorf("could not multiply %s by %s", l.Value, r.Value)
+	return leftAndRightOperation(l, r, func(lf, rf float64) float64 {
+		return lf - rf
+	})
 }
 
-func convertLeftAndRightToIntegers(l, r string) (int, int, error) {
-	lInt, err := strconv.Atoi(l)
-	if err != nil {
-		return 0, 0, errors.Errorf("cannot covert %s to integer", l)
-	}
-
-	rInt, err := strconv.Atoi(r)
-	if err != nil {
-		return 0, 0, errors.Errorf("cannot covert %s to integer", r)
-	}
-
-	return lInt, rInt, nil
+func Div(l, r core.Token) (core.Token, error) {
+	return leftAndRightOperation(l, r, func(lf, rf float64) float64 {
+		return lf / rf
+	})
 }
 
 func Lg(tokens ...core.Token) (result core.Token, err error) {
