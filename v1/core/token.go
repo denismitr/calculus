@@ -2,11 +2,11 @@ package core
 
 import "fmt"
 
-type token struct {
-	kind kind
-	value string
+type Token struct {
+	Kind  Kind
+	Value string
 }
 
-func (t token) String() string {
-	return fmt.Sprintf("[%s]: %s", t.kind.String(), t.value)
+func (t Token) String() string {
+	return fmt.Sprintf("[%s]: %s", t.Kind.String(), t.Value)
 }

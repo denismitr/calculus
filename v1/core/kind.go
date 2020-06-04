@@ -2,7 +2,7 @@ package core
 
 import "fmt"
 
-type kind int
+type Kind int
 
 const (
 	ILLEGAL = iota
@@ -23,7 +23,7 @@ const (
 	COMMA
 )
 
-var kinds = [...]string{
+var Kinds = [...]string{
 	ILLEGAL: "illegal",
 	IDENT:   "IDENTIFIER",
 	INT:     "integer",
@@ -41,10 +41,10 @@ var kinds = [...]string{
 	COMMA: ".",
 }
 
-func (k kind) String() string {
-	if k >= 0 && k < kind(len(kinds)) {
-		return kinds[k]
+func (k Kind) String() string {
+	if k >= 0 && k < Kind(len(Kinds)) {
+		return Kinds[k]
 	}
 
-	return fmt.Sprintf("token(%d)", int(k))
+	return fmt.Sprintf("Token(%d)", int(k))
 }
