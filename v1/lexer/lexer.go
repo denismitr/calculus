@@ -78,14 +78,14 @@ func (l *StringLexer) Tokenize(input string) error {
 			continue
 		}
 
-		if isNumeric(input[cursor : cursor+1]) {
+		if isFloat(input[cursor : cursor+1]) {
 			j := cursor + 1
 
-			for j < len(input) && isNumeric(input[cursor:j+1]) {
+			for j < len(input) && isFloat(input[cursor:j+1]) {
 				j++
 			}
 
-			l.tokens = append(l.tokens, core.Token{Kind: core.INT, Value: input[cursor:j]})
+			l.tokens = append(l.tokens, core.Token{Kind: core.FLOAT, Value: input[cursor:j]})
 			cursor = j
 			continue
 		}

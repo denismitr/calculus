@@ -5,6 +5,10 @@ import (
 	"calculus/v1/std/num"
 )
 
+const (
+	lg = "lg"
+	pow = "pow"
+)
 
 func InitializeLibraries(e *evaluator) core.EvaluatorInitializer {
 	return func(library ...core.Library) {
@@ -17,6 +21,7 @@ func InitializeLibraries(e *evaluator) core.EvaluatorInitializer {
 		e.unaryHandler[core.DEC] = num.Dec
 
 		// functions
-		e.callableHandlers["lg"] = num.Lg
+		e.callableHandlers[lg] = num.Lg
+		e.callableHandlers[pow] = num.Pow
 	}
 }

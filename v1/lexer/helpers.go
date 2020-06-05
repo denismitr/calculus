@@ -4,11 +4,16 @@ import (
 	"regexp"
 )
 
-var numericRe = regexp.MustCompile("^[0-9]+$")
+var intRe = regexp.MustCompile("^[0-9]+$")
+var floatRe = regexp.MustCompile("\\d+\\.?\\d*?$")
 var nameRe = regexp.MustCompile("^[a-zA-Z_]+$")
 
-func isNumeric(s string) bool {
-	return numericRe.MatchString(s)
+func isInt(s string) bool {
+	return intRe.MatchString(s)
+}
+
+func isFloat(s string) bool {
+	return floatRe.MatchString(s)
 }
 
 func isName(s string) bool {

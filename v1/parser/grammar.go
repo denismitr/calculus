@@ -40,6 +40,7 @@ func InitializeDefaultGrammar() Initializer {
 		g.prefix(core.IDENT, 0, p.resolveIdentifier)
 
 		g.prefix(core.INT, 0, p.resolveInteger)
+		g.prefix(core.FLOAT, 0, p.resolveInteger)
 		g.prefix(core.ADD, 6, p.resolvePrefix)
 		g.prefix(core.SUB, 6, p.resolvePrefix)
 

@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const standardPrecision = 5
+
 func convertLeftAndRightToIntegers(l, r string) (int, int, error) {
 	lInt, err := strconv.Atoi(l)
 	if err != nil {
@@ -35,8 +37,8 @@ func convertLeftAndRightToFloats(l, r string) (lf float64, rf float64, err error
 	return
 }
 
-func deriveValueAndKindFromFloat(f float64) (v string, k core.Kind) {
-	v = strconv.FormatFloat(f, 'f', 5, 64)
+func deriveValueAndKindFromFloat(f float64, precision int) (v string, k core.Kind) {
+	v = strconv.FormatFloat(f, 'f', precision, 64)
 
 	if strings.Contains(v, ".00000") {
 		v = strings.ReplaceAll(v, ".00000", "")
@@ -57,7 +59,7 @@ func leftAndRightOperation(l, r core.Token, op func(l, r float64) float64) (resu
 
 	operationResult := op(lf, rf)
 
-	v, k := deriveValueAndKindFromFloat(operationResult)
+	v, k := deriveValueAndKindFromFloat(operationResult, standardPrecision)
 	result.Kind = k
 	result.Value = v
 	return
@@ -73,10 +75,19 @@ func applyUnaryOperationOnFloat(t core.Token, applier func (float64) float64) (c
 
 	f = applier(f)
 
-	v, k := deriveValueAndKindFromFloat(f)
+	v, k := deriveValueAndKindFromFloat(f, standardPrecision)
 
 	result.Value = v
 	result.Kind = k
 
 	return result, nil
+}
+
+func convertTokenToIntOrDefault(t core.Token, def int) (int, error) {
+	p, err := strconv.ParseInt(t.Value, 10, 8)
+	if err != nil {
+		return def, err
+	}
+
+	return int(p), nil
 }
