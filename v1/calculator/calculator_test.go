@@ -14,20 +14,20 @@ type tStruct struct {
 
 func TestCalculusWithValidInputs(t *testing.T) {
 	tt := []tStruct{
-		{name: "one-plus-one", expr: "1 + 1", result: "2"},
+		{name: "1+1", expr: "1 + 1", result: "2"},
 		{name: "20+4", expr: "20 + 4", result: "24"},
 		{name: "20009+444", expr: "20009+444", result: "20453"},
-		{name: "multi-1", expr: "5 + (4 + 10)", result: "19"},
-		{name: "mul", expr: "6 * 10", result: "60"},
-		{name: "multi-2", expr: "5 + 6 * 10", result: "65"},
-		{name: "multi-3", expr: "5 + (6 * 10 + 20)", result: "85"},
-		{name: "multi-4", expr: "5 + (6 * 10 * 2)", result: "125"},
-		{name: "multi-5", expr: "5 + (6 * 10 * 2 * 5)", result: "605"},
-		{name: "multi-6", expr: "5 + (6 * 10 * 2 * 5) - 1", result: "604"},
-		{name: "div-1", expr: "6 / 3", result: "2"},
-		{name: "increment-1", expr: "5++", result: "6"},
-		{name: "increment-2", expr: "5++ + 8", result: "14"},
-		{name: "decrement-4", expr: "5--", result: "4"},
+		{name: "5 + (4 + 10)", expr: "5 + (4 + 10)", result: "19"},
+		{name: "6 * 10", expr: "6 * 10", result: "60"},
+		{name: "5 + 6 * 10", expr: "5 + 6 * 10", result: "65"},
+		{name: "5 + (6 * 10 + 20)", expr: "5 + (6 * 10 + 20)", result: "85"},
+		{name: "5 + (6 * 10 * 2)", expr: "5 + (6 * 10 * 2)", result: "125"},
+		{name: "5 + (6 * 10 * 2 * 5)", expr: "5 + (6 * 10 * 2 * 5)", result: "605"},
+		{name: "5 + (6 * 10 * 2 * 5) - 1", expr: "5 + (6 * 10 * 2 * 5) - 1", result: "604"},
+		{name: "6 / 3", expr: "6 / 3", result: "2"},
+		{name: "5++", expr: "5++", result: "6"},
+		{name: "5++ + 8", expr: "5++ + 8", result: "14"},
+		{name: "5--", expr: "5--", result: "4"},
 	}
 
 	c := New(std.Num)
