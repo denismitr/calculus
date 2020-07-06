@@ -8,6 +8,7 @@ import (
 const (
 	lg = "lg"
 	pow = "pow"
+	root = "root"
 )
 
 type Initializer func(*Evaluator)
@@ -25,5 +26,6 @@ func StdLibrary() Initializer {
 		// functions
 		e.callableHandlers[lg] = num.Lg
 		e.callableHandlers[pow] = num.Pow
+		e.callableHandlers[root] = num.Root
 	}
 }

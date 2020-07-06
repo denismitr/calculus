@@ -57,6 +57,10 @@ func TestStdNumFunctionsTest(t *testing.T) {
 		{name: "pow(10,5) + 1", expr: "pow(10,5) + 1", result: "100001"},
 		{name: "pow(4.76,3,14)", expr: "pow(4.76,3,14)", result: "107.85017599999999"},
 		{name: "pow(4.76,3)", expr: "pow(4.76,3)", result: "107.85018"},
+		{name: "root(4)", expr: "root(4)", result: "2"},
+		{name: "root(12,3)", expr: "root(12,3)", result: "2.28943"},
+		{name: "root(12,3)", expr: "root(12.6,4,6)", result: "1.884051"},
+		{name: "root(12,3)", expr: "root(12.6,4,6) + root(64)", result: "9.88405"},
 	}
 
 	c := New(e, p)
