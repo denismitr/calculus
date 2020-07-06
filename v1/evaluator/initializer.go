@@ -10,8 +10,10 @@ const (
 	pow = "pow"
 )
 
-func InitializeLibraries(e *evaluator) core.EvaluatorInitializer {
-	return func(library ...core.Library) {
+type Initializer func(*Evaluator)
+
+func StdLibrary() Initializer {
+	return func (e *Evaluator) {
 		// operators
 		e.binaryHandlers[core.ADD] = num.Sum
 		e.binaryHandlers[core.MUL] = num.Mul

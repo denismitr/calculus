@@ -34,7 +34,7 @@ func newGrammar() *grammar {
 	}
 }
 
-func InitializeDefaultGrammar() Initializer {
+func DefaultGrammar() Initializer {
 	return func(p *Parser, g *grammar) {
 		g.prefix(core.LPAREN, 0, p.resolveParenthesis)
 		g.prefix(core.IDENT, 0, p.resolveIdentifier)

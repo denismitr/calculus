@@ -9,21 +9,27 @@ type binaryHandler func(l, r core.Token) (core.Token, error)
 type callableHandler func(toks ...core.Token) (core.Token, error)
 type unaryHandler func(k core.Token) (core.Token, error)
 
-type evaluator struct {
+type Evaluator struct {
 	binaryHandlers map[core.Kind]binaryHandler
 	unaryHandler map[core.Kind]unaryHandler
 	callableHandlers map[string]callableHandler
 }
 
-func New() *evaluator {
-	return &evaluator{
+func New(initializers ...Initializer) *Evaluator {
+	e := &Evaluator{
 		binaryHandlers: make(map[core.Kind]binaryHandler),
 		callableHandlers: make(map[string]callableHandler),
 		unaryHandler: make(map[core.Kind]unaryHandler),
 	}
+
+	for i := range initializers {
+		initializers[i](e)
+	}
+
+	return e
 }
 
-func (e *evaluator) Binary(op, l, r core.Token) (core.Token, error) {
+func (e *Evaluator) Binary(op, l, r core.Token) (core.Token, error) {
 	var result core.Token
 	handler, ok := e.binaryHandlers[op.Kind]
 	if !ok {
@@ -33,7 +39,7 @@ func (e *evaluator) Binary(op, l, r core.Token) (core.Token, error) {
 	return handler(l, r)
 }
 
-func (e *evaluator) Unary(op, t core.Token) (core.Token, error) {
+func (e *Evaluator) Unary(op, t core.Token) (core.Token, error) {
 	var result core.Token
 
 	handler, ok := e.unaryHandler[op.Kind]
@@ -44,7 +50,7 @@ func (e *evaluator) Unary(op, t core.Token) (core.Token, error) {
 	return handler(t)
 }
 
-func (e *evaluator) Callable(l core.Token, tokens ...core.Token) (core.Token, error) {
+func (e *Evaluator) Callable(l core.Token, tokens ...core.Token) (core.Token, error) {
 	var result core.Token
 	handler, ok := e.callableHandlers[l.Value]
 	if !ok {

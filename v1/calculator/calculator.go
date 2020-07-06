@@ -2,9 +2,6 @@ package calculator
 
 import (
 	"calculus/v1/core"
-	"calculus/v1/evaluator"
-	"calculus/v1/lexer"
-	"calculus/v1/parser"
 )
 
 type Calculator struct {
@@ -12,15 +9,7 @@ type Calculator struct {
 	e core.Evaluator
 }
 
-func New(libraries ...core.Library) *Calculator {
-	parserInitializer := parser.InitializeDefaultGrammar()
-	l := lexer.New()
-	p := parser.New(l, parserInitializer)
-	e := evaluator.New()
-
-	libraryInitializer := evaluator.InitializeLibraries(e)
-	libraryInitializer(libraries...)
-
+func New(e core.Evaluator, p core.Parser) *Calculator {
 	return &Calculator{p: p, e: e}
 }
 

@@ -1,7 +1,9 @@
 package calculator
 
 import (
-	"calculus/v1/std"
+	"calculus/v1/evaluator"
+	"calculus/v1/lexer"
+	"calculus/v1/parser"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -13,6 +15,9 @@ type tStruct struct {
 }
 
 func TestCalculusWithValidInputs(t *testing.T) {
+	e := evaluator.New(evaluator.StdLibrary())
+	p := parser.New(lexer.New(), parser.DefaultGrammar())
+
 	tt := []tStruct{
 		{name: "1+1", expr: "1 + 1", result: "2"},
 		{name: "20+4", expr: "20 + 4", result: "24"},
@@ -30,7 +35,7 @@ func TestCalculusWithValidInputs(t *testing.T) {
 		{name: "5--", expr: "5--", result: "4"},
 	}
 
-	c := New(std.Num)
+	c := New(e, p)
 
 	for _, tc := range tt {
 		r, err := c.Calculate(tc.expr)
@@ -40,6 +45,9 @@ func TestCalculusWithValidInputs(t *testing.T) {
 }
 
 func TestStdNumFunctionsTest(t *testing.T) {
+	e := evaluator.New(evaluator.StdLibrary())
+	p := parser.New(lexer.New(), parser.DefaultGrammar())
+
 	tt := []tStruct{
 		{name: "lg(2)", expr: "lg(2)", result: "0.30103"},
 		{name: "lg(2, 1)", expr: "lg(2, 1)", result: "0.3"},
@@ -51,7 +59,7 @@ func TestStdNumFunctionsTest(t *testing.T) {
 		{name: "pow(4.76,3)", expr: "pow(4.76,3)", result: "107.85018"},
 	}
 
-	c := New(std.Num)
+	c := New(e, p)
 
 	for _, tc := range tt {
 		r, err := c.Calculate(tc.expr)
